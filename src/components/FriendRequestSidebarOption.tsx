@@ -18,13 +18,14 @@ const FriendRequestSidebarOption: FC<FriendRequestSidebarOptionProps> = ({ sessi
 		pusherClient.subscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
 
 		const friendRequestHandler = () => {
-			setUnseenRequestsCount((prev) => prev++);
+			setUnseenRequestsCount((prev) => ++prev);
 		};
 
 		pusherClient.bind('incoming_friend_requests', friendRequestHandler);
 
 		return () => {
 			pusherClient.unsubscribe(toPusherKey(`user:${sessionId}:incoming_friend_requests`));
+			pusherClient.unbind('incoming_friend_requests', friendRequestHandler);
 		};
 	}, [sessionId]);
 
